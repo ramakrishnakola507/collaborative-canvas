@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>collaborative-canvas</title>
+  <!-- External stylesheet for custom UI styling -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Google font for clean modern typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+     <!-- ===========================
+       SIDEBAR: Online Users Panel
+       =========================== -->
+
+  <div id="user-sidebar" class="sidebar">
+    <!-- Button to close the sidebar -->
+    <a href="javascript:void(0)" class="close-btn" id="close-nav-btn">&times;</a>
+    <!-- Sidebar title -->
+    <h3>Online Users</h3>
+
+    <!-- Dynamic user list (populated via JS) -->
+    <div id="user-list">
+      </div>
+  </div>
+
+  <!-- ===========================
+       MAIN DRAWING AREA
+       =========================== -->
+
+  <div id="main-content">
+    <!-- Button to open sidebar -->
+    <button class="open-btn" id="open-nav-btn">&#9776; Users</button>
+
+    <!-- Canvas where drawing happens -->
+
+    <canvas id="drawing-canvas"></canvas>
+    
+    <!-- Overlay layer for showing other users' cursors -->
+
+    <div id="cursor-layer">
+      </div>
+  </div>
+
+    <!-- ===========================
+       TOOLBAR: Drawing Controls
+       =========================== -->
+
+  <div id="toolbar">
+    <!-- === Tool Group: Brush & Eraser === -->
+    <div class="tool-group">
+      <!-- Brush tool -->
+      <button class="tool-button active" data-tool="brush" title="Brush">
+        <!-- Brush icon (SVG) -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3Z"/><path d="M5 19l-1.59-1.59a2 2 0 0 0-2.82 0L2 19l4 4 1.59-1.59a2 2 0 0 0 0-2.82L6 17l-1-1Z"/></svg>
+      </button>
+      <!-- Eraser tool -->
+      <button class="tool-button" data-tool="eraser" title="Eraser">
+      <!-- Eraser icon (SVG) -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21H7Z"/><path d="M22 21H7"/></svg>
+      </button>
+    </div>
+      <!-- Separator between tool groups -->
+    <div class="tool-separator"></div>
+    <!-- === Tool Group: Color Selection === -->
+    <div class="tool-group tool-options">
+      <!-- Predefined color swatches -->
+      <div class="swatch active" data-color="#FFFFFF" style="background: #FFFFFF;" title="White"></div>
+      <div class="swatch" data-color="#FF3B30" style="background: #FF3B30;" title="Red"></div>
+      <div class="swatch" data-color="#34C759" style="background: #34C759;" title="Green"></div>
+      <div class="swatch" data-color="#00A9FF" style="background: #00A9FF;" title="Blue"></div>
+      
+      <!-- Native color picker for custom colors -->
+
+      <div class="native-color-picker-wrapper" title="Custom Color">
+        <input type="color" id="color-picker-native" value="#FFFFFF">
+      </div>
+    </div>
+     <!-- Another separator -->
+    <div class="tool-separator"></div>
+     <!-- === Stroke Width Slider === -->
+    <div class="stroke-slider-container">
+      <!-- Icon to indicate stroke width control -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="10" y1="6" y2="6"/><line x1="14" x2="20" y1="6" y2="6"/><line x1="4" x2="10" y1="18" y2="18"/><line x1="14" x2="20" y1="18" y2="18"/></svg>
+      <input type="range" id="stroke-width-slider" min="1" max="50" value="5" title="Stroke Width">
+    </div>
+    
+    <!-- Range slider for stroke thickness -->
+
+    <div class="tool-separator"></div>
+
+    <!-- === Tool Group: Undo / Redo / Clear === -->
+
+    <div class="tool-group">
+      <!-- Undo button -->
+      <button class="tool-button" data-tool="undo" title="Undo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+      </button>
+
+      <!-- Redo button (flipped horizontally) -->
+      <button class="tool-button" data-tool="redo" title="Redo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+      </button>
+
+      <!-- Clear canvas button -->
+      <button class="tool-button" data-tool="clear" title="Clear Canvas">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+      </button>
+    </div>
+  </div>
+
+ <!-- Socket.io handles WebSocket communication -->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- Custom script files -->
+  <script src="canvas.js"></script>        <!-- Canvas drawing logic -->
+  <script src="websocket.js"></script>     <!-- WebSocket communication logic -->
+  <script src="ui.js"></script>            <!-- UI interaction logic -->
+  <script src="main.js"></script>          <!-- Main application logic -->
+</body>
+</html>
