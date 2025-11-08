@@ -1,5 +1,5 @@
 // --- WebSocket Connection ---
-const socket = io();
+this.socket = io({ transports: ['websocket'] });
 window.socket = socket; // Make it globally accessible for other scripts
 
 // Map to store remote user drawing states
