@@ -119,6 +119,14 @@ io.on('connection', (socket) => {
 
 });
 
-server.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+// --- THIS IS THE COMPLETE, CORRECT CODE ---
+// --- PASTE THIS AT THE BOTTOM OF server/server.js ---
+
+const PORT = process.env.PORT || 3001;
+
+server.listen({
+    host: '0.0.0.0', // The fix for Render
+    port: PORT      // The port variable
+}, () => {
+    console.log(`Server running on port ${PORT}`);
 });
