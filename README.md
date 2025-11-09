@@ -1,38 +1,54 @@
 Real-Time Collaborative Canvas
 
-This is a multi-user, real-time drawing application built with Node.js, Express, Socket.io, and vanilla JavaScript (HTML5 Canvas). It allows multiple users to join "rooms" and draw together simultaneously.
+A multi-user, real-time drawing application built with Node.js, Express, Socket.io, and vanilla JavaScript. It allows multiple users to draw together simultaneously on a single, global canvas.
 
 Features
 
-Real-time Drawing: See other users' strokes as they draw.
+Real-time Drawing: See other users' strokes appear on your canvas instantly.
 
-Room System (Bonus): Create or join isolated drawing rooms.
-
-Drawing Tools: Brush and eraser.
+Drawing Tools: A smooth-drawing brush and a functional eraser.
 
 Tool Options: Adjustable stroke color and width.
 
-Global Undo: The "Undo" button undoes the last stroke drawn by anyone in the room, keeping all users in sync.
+Global Undo/Redo: Undo or redo the last strokes drawn by anyone, keeping all clients in sync.
 
-Clear Canvas: A button to clear the entire canvas for everyone in the room.
+Clear Canvas: A button to clear the entire canvas for everyone.
 
-User List: See who is currently in the room with you.
+Live User List: See a list of all users currently connected to the canvas.
 
-Real-Time Cursors (Bonus): See the cursors of other users moving on the canvas.
+Real-Time Cursors: See other users' cursors moving on the canvas.
 
-Mobile Touch Support (Bonus): Fully functional on mobile and tablet devices.
+Mobile Touch Support: Fully functional on mobile and tablet devices.
 
 Responsive UI: Adapts to desktop and mobile screen sizes.
 
-Time Spent
+How to Test (Live Demo)
 
-This project was built to meet a specific challenge. Total development time was approximately 2 hours.
+The easiest way to test the real-time features is with the live demo link.
 
-Setup & Running
+Open the Live Demo:
+
+https://collaborative-canvas-lb64.onrender.com/
+
+Open a Second Window:
+
+Open the same link in a second browser window (or an incognito window).
+
+Test:
+
+Arrange the windows side-by-side.
+
+Draw in one window. You will see it appear in the other, along with the other user in the "Online Users" list and their live cursor.
+
+Test the "Undo," "Redo," and "Clear" buttons to see them sync globally.
+
+Running Locally
+
+If you want to run the project on your own machine:
 
 Clone the repository:
 
-git clone [your-repo-url]
+git clone [https://github.com/ramakrishnakola507/collaborative-canvas.git](https://github.com/ramakrishnakola507/collaborative-canvas.git)
 cd collaborative-canvas
 
 
@@ -47,26 +63,17 @@ npm start
 
 
 Open the application:
-Open your browser and navigate to http://localhost:3000.
 
-How to Test (Multiple Users)
+Open your browser and navigate to http://localhost:3001.
 
-Open http://localhost:3000 in a browser window.
+You can follow the same multi-window testing steps as the Live Demo.
 
-Enter a room name (e.g., "test-room") and click "Join".
+Known Limitations
 
-Open a second browser window (or an incognito window) and navigate to http://localhost:3000 again.
+Single Global Canvas: This application currently supports a single, global canvas. All users who open the app are connected to the same drawing board.
 
-Enter the same room name ("test-room") and click "Join".
+Canvas Resizing: If the browser window is resized, the local canvas clears. A better implementation would re-request the drawing history from the server.
 
-Arrange the windows side-by-side.
+Undo Performance: The Undo/Redo feature works by having the server send the entire drawing history to all clients for a full redraw. This is simple and guarantees consistency but could become slow with thousands of strokes.
 
-You can now draw in one window and see it appear in real-time in the other. You will also see the user list update and the other user's cursor.
-
-Known Limitations/Bugs
-
-Canvas Resizing: If the browser window is resized, the canvas clears. The drawing history is not reapplied automatically (though a new user joining will still get the full history).
-
-Undo Performance: The "Undo" feature works by having the server send the entire drawing history (minus one stroke) to all clients for a full redraw. This is simple and guarantees consistency, but it could become slow with a very complex drawing (thousands of strokes).
-
-State Persistence: Drawing history is stored in server memory. If the server restarts, all drawings are lost.
+State Persistence: Drawing history is stored in server memory. If the server (on Render or locally) restarts, all drawings are lost.
